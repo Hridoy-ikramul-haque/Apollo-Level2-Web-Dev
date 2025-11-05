@@ -32,12 +32,19 @@ const sales = [
 
 // sol
 const salesData = sales.reduce((cat, data) => {
-    cat[data.category] = {
-        totalRevenue: ((totalRevenue || 0) + (data.price * data.quantity)),
-        itemCount: (itemCount||0)+data.quantity
-
+    
+    let { category, price, quantity } = data;
+    if (!cat[data.category]) {
+        cat[data.category] = {
+            totalRevenue: 0,
+            itemCount:0
+        }
+        
     }
+    cat[data.category].totalRevenue += price * quantity;
+    cat[data.category].itemCount += quantity;
     return cat;
+    
 }, {});
 
 console.log(salesData);
