@@ -16,6 +16,20 @@ const canAccess = currentUser.some(role => {
 
 
 // Array.from()
-const arr = Array.from({ length: 5 }).fill(0);
+// const arr = Array.from({ length: 5 }).fill(0);
+const arr = Array.from({ length: 5 }, (_, i)=>i);
 
-console.log(arr);
+// console.log(arr);
+
+const range = function (start, stop, jump)
+{
+    let ar_length = Math.ceil((stop - start) / jump);
+    let arr = Array.from({ length: ar_length }, (_, i) => {
+        return start + i * jump; // 2 + (0*1) 
+    });
+
+    return arr;
+};
+
+let automateArray = range(1,10,3); 
+console.log(automateArray);
