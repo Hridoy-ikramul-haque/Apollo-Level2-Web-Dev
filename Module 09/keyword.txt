@@ -1,0 +1,8 @@
+highly scalable
+single threaded , multi threaded
+thread pool
+event driven 
+non blocking I/O
+call stack 
+event loop 
+threat pool

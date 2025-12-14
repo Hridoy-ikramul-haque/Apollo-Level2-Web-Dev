@@ -26,3 +26,4 @@ obj_count.addAmount(100);
 obj_count.viewAmont();
 obj_count.addAmount(200); 
 obj_count.viewAmont(); 
+

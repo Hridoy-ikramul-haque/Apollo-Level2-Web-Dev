@@ -23,5 +23,29 @@ const post = lookupTable["p-103"]; //O(1)
 
 for (let x in lookupTable)
 {
-    console.log(x);
+    // console.log(x);
 }
+
+
+class Count{
+    constructor()
+    {
+        this.amount = 0;
+    }
+    addAmount(amount)
+    {
+        this.amount += amount; 
+    }
+    printAmount() {
+        console.log(this.amount);
+    }
+};
+
+let amt1 = new Count; 
+let amt2 = new Count; 
+amt1.printAmount();
+amt1.addAmount(100);
+amt1.printAmount(); 
+amt2.printAmount();
+amt2.addAmount(500);
+amt2.printAmount();
