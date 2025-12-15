@@ -7,3 +7,5 @@ npm i -D typescript ts-node @types/node
 npx tsc --init 
 
 npm i dotenv
+
+npm i ts-node-dev
