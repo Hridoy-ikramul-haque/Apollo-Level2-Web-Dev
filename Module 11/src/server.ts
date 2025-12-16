@@ -6,23 +6,7 @@ import './routes/allroutes';
 
 
 
-
-
-
-
-
-
 const server: Server = http.createServer((req: IncomingMessage, res: ServerResponse) => {
-    // if (req.url == '/' && req.method == 'GET') {
-    //     res.writeHead(200, { 'content-type': 'application/json' });
-    //     res.end(JSON.stringify(
-    //         {
-    //             message: 'this is root',
-    //             owner: "hridoy",
-    //             path: req.url
-    //         }
-    //     ));
-    // }
     const method = req.method?.toUpperCase() || "";
     const path = req.url || "";
     const methodMap = routes.get(method);
