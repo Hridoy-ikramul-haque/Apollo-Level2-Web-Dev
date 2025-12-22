@@ -5,12 +5,24 @@ import addRoutes, { routes } from './helpers/routeHandler';
 import './routes/allroutes';
 
 
+function findDynamicRoute(method: string, url: string) {
+    const methodMap = routes.get(method);
+    if (!methodMap) return null;
+    for (const [routePath, handler] of methodMap) {
+        const routeParts = routePath.split('/');
+        const urlParts = url.split('/');
+
+        
+    }
+}
+
 
 const server: Server = http.createServer((req: IncomingMessage, res: ServerResponse) => {
     const method = req.method?.toUpperCase() || "";
     const path = req.url || "";
     const methodMap = routes.get(method);
     const handler = methodMap?.get(path);
+    console.log("hridoy");
 
     if (handler)
     {
@@ -25,32 +37,6 @@ const server: Server = http.createServer((req: IncomingMessage, res: ServerRespo
             }
         ))
     }
-
-    
-    
-    // if (req.url == "/user/data" && req.method == "POST") {
-        
-    //     res.writeHead(200, { "type": "application/json" });
-
-    //     let body = "";
-    //     req.on("data", (chunk) => {
-    //         body += chunk.toString();
-    //     })
-    //     req.on("end", () => {
-    //         try {
-    //             const parseBody = JSON.parse(body);
-    //             console.log('se changes');
-    //             console.log(parseBody);
-    //             // res.end(JSON.stringify(parseBody));
-    //             res.end(body);
-    //         } catch (error:any) {
-    //             console.log(error?.message);
-    //         }
-    //     })
-
-        
-        
-    // }
 });
 
 

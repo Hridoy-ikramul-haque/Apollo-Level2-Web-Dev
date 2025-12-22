@@ -1,3 +1,5 @@
+import { readUser, writeUser } from "../helpers/fileDb";
+import parseBody from "../helpers/ParseBody";
 import addRoutes from "../helpers/routeHandler";
 import sendJson from "../sendJson";
 
@@ -29,3 +31,21 @@ addRoutes('GET', '/api', (req, res) => {
         method: "GET"
     })
 });
+
+    
+
+addRoutes('POST', '/user/api', async (req, res) => {
+    let data = await parseBody(req);
+    const users = readUser();
+    console.log(users);
+    const newUser = {
+        id: Date.now(),
+        ...data
+    }
+    users.push(newUser);
+    writeUser(users);
+    console.log(users);
+    sendJson(res, 201, { success: true, data: data });
+
+});
+
