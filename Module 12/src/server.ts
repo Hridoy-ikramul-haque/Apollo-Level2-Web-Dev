@@ -1,9 +1,12 @@
 import express, { Request, Response } from 'express';
 import { Pool } from 'pg';
+import dotenv from 'dotenv';
+import path from 'path';
 const app = express();
 const port = 5000;
+dotenv.config({ path: path.join(process.cwd(), '.env') });
 const pool = new Pool({
-    connectionString:`postgresql://neondb_owner:npg_tIo6pyNdmcM3@ep-rough-tree-ad8uzm15-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require`
+    connectionString: `${process.env.CONNECTION_STR}`
 })
 
 const initDB = async () => {
@@ -19,23 +22,43 @@ const initDB = async () => {
         updated_at TIMESTAMP DEFAULT NOW()
         )
         `);
-    
-    
+
+    await pool.query(`
+        CREATE TABLE IF NOT EXISTS todos(
+        id SERIAL PRIMARY KEY,
+        user_id INT REFERENCES USERS(id) ON DELETE CASCADE,
+        tittle VARCHAR(200) NOT NULL,
+        description TEXT,
+        completed BOOLEAN DEFAULT false,
+        due_date DATE,
+        created_at TIMESTAMP DEFAULT NOW(),
+        updated_at TIMESTAMP DEFAULT NOW()
+        )
+        `)
 };
 
 initDB();
 
 
-app.get("/", (req:Request, res:Response) => {
+app.get("/", (req: Request, res: Response) => {
     res.end("HELLO WORLDsss");
 });
 
 app.use(express.json());
-app.post("/", (req:Request,res:Response) => {
+app.post("/", (req: Request, res: Response) => {
     console.log(req.body);
     res.status(201).json({
         learning: 'express',
-        position:"noob"
+        position: "noob"
+    })
+})
+
+app.post('/users', (req: Request, res: Response) => {
+    const { name, email } = req.body;
+    console.log(name);
+    console.log(req.body);
+    res.status(201).json({
+        url:req.url
     })
 })
 
