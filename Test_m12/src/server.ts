@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express, { NextFunction, Request, Response } from "express";
 import { Pool } from "pg";
 import path from "path"
 import dotenv from "dotenv";
@@ -42,13 +42,18 @@ const initDB = async () => {
 
 initDB();
 
-
+// Middleware
+const logger = (req: Request, res: Response, next: NextFunction) => {
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}\n`);
+    next();
+}
 
 // parser 
 app.use(express.json());
 
 // users crud 
-app.get('/', (req: Request, res: Response) => {
+
+app.get('/', logger, (req: Request, res: Response) => {
     res.send("Hello World!!");
 })
 
@@ -182,8 +187,40 @@ app.delete('/users/:id', async (req: Request, res: Response) => {
 
 
 
-// todos crud 
+// todos crud
 
+//post todo
+app.post('/todos', async (req: Request, res: Response) => {
+    const { user_id, tittle } = req.body;
+    try {
+        const result = await pool.query(`INSERT INTO todos(user_id,tittle) VALUES($1,$2) RETURNING *`, [user_id, tittle]);
+
+        res.status(201).json({
+            success: true,
+            message: "Todos created",
+            data: result.rows[0]
+        })
+    } catch (error: any) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+})
+
+
+//get all todos
+//get specific id todo
+// update todo
+// delete todo
+
+
+
+// not found route [404]
+app.use((req: Request, res: Response) => {
+    res.status(404).json({
+        success: false,
+        messgae: "there is no such route",
+        path: req.path
+    })
+})
 
 
 app.listen(port, () => {
