@@ -2,7 +2,7 @@
 import { promises } from "node:dns";
 import { IncomingMessage } from "node:http";
 
-async function parseBody(req: IncomingMessage):Promise<any> {
+async function parseBody(req: IncomingMessage): Promise<any> {
     return new Promise((resolve, reject) => {
         let body = "";
         req.on("data", (chunk) => {
