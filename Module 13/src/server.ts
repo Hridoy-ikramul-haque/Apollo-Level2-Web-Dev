@@ -2,6 +2,8 @@ import express, { NextFunction, Request, Response } from "express";
 import { Pool } from "pg";
 import config from "./config";
 import initDB, { pool } from "./config/db";
+import logger from "./middleware/logger";
+import { userRoutes } from "./modules/user/user.routes";
 
 
 
@@ -12,11 +14,7 @@ const port = config.port;
 
 initDB();
 
-// Middleware
-const logger = (req: Request, res: Response, next: NextFunction) => {
-    console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}\n`);
-    next();
-}
+
 
 // parser 
 app.use(express.json());
@@ -28,21 +26,6 @@ app.get('/', logger, (req: Request, res: Response) => {
 })
 
 
-app.get('/users', async (req: Request, res: Response) => {
-    try {
-        const result = await pool.query(`Select * from users`);
-        res.status(200).json({
-            success: true,
-            message: "user retrieved successfully",
-            data: result.rows
-        })
-    } catch (error: any) {
-        res.status(500).json({
-            success: false,
-            message: error.meassage
-        })
-    }
-})
 
 
 app.get("/users/:id", async (req: Request, res: Response) => {
@@ -72,32 +55,7 @@ app.get("/users/:id", async (req: Request, res: Response) => {
     }
 })
 
-
-app.post('/users', async (req: Request, res: Response) => {
-    // console.log(req.body);
-    const { name, email } = req.body;
-    // console.log(email);
-    try {
-        const result = await pool.query(`
-            INSERT INTO users(name,email) VALUES($1,$2) RETURNING *
-            `, [name, email]);
-        // console.log(result.rows[0]);
-
-        // res.send({ message: "data inserted..." });
-        res.status(201).json({
-            success: true,
-            message: "Data inserted successfully",
-            data: result.rows[0]
-        })
-    } catch (error: any) {
-        res.status(500).json({ success: false, meassage: error.message })
-    }
-    // res.status(201).json({
-    //     name: "billu",
-    //     status: 201,
-    //     message: "Api is working"
-    // })
-})
+app.use("/users", userRoutes);
 
 
 
