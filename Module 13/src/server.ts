@@ -4,6 +4,7 @@ import config from "./config";
 import initDB, { pool } from "./config/db";
 import logger from "./middleware/logger";
 import { userRoutes } from "./modules/user/user.routes";
+import { authRouter } from "./modules/auth/auth.route";
 
 
 
@@ -27,93 +28,11 @@ app.get('/', logger, (req: Request, res: Response) => {
 
 
 
-
-app.get("/users/:id", async (req: Request, res: Response) => {
-    // console.log(req.params.id);
-    // res.send("check");
-    try {
-        const result = await pool.query(`SELECT * FROM users WHERE id=$1`, [req.params.id]);
-        // console.log(result.rows);
-        if (result.rows.length === 0) {
-            res.status(404).json({
-                success: false,
-                message: "Sorry......."
-            })
-        }
-        else {
-            res.status(200).json({
-                success: true,
-                message: "User Fetched successfully",
-                data: result.rows[0]
-            })
-        }
-    } catch (error: any) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        })
-    }
-})
-
+//User Crud
 app.use("/users", userRoutes);
 
-
-
-app.put('/users/:id', async (req: Request, res: Response) => {
-    const { name, email } = req.body;
-
-    try {
-        const result = await pool.query(`UPDATE users SET name=$1,email=$2 WHERE id=$3 RETURNING *`, [name, email, req.params.id])
-
-        if (result.rows.length === 0) {
-            res.status(404).json({
-                success: false,
-                message: "data update failed"
-            })
-        }
-        else {
-            res.status(200).json({
-                success: true,
-                message: "data updated",
-                data: result.rows[0]
-
-            })
-        }
-    } catch (error: any) {
-        res.status(500).json({
-            success: "false",
-            error: error.message
-        })
-    }
-})
-
-
-app.delete('/users/:id', async (req: Request, res: Response) => {
-    try {
-        const result = await pool.query(`DELETE FROM users WHERE id=$1`, [req.params.id]);
-        if (result.rowCount === 0) {
-            res.status(404).json({
-                success: false,
-                message: "there no such id......."
-            })
-        }
-        else {
-            res.status(200).json({
-                success: true,
-                message: `ID NUMBER ${req.params.id} data deleted`,
-                data: result.rows
-            })
-        }
-    } catch (error: any) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        })
-    }
-})
-
-
-
+// Auth 
+app.use("/auth", authRouter);
 
 // todos crud
 

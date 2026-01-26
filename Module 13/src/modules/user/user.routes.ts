@@ -5,24 +5,11 @@ import { userController } from "./user.controller";
 
 const router = express.Router();
 
-router.post("/", userController)
+router.post("/", userController.createUser)
+router.get('/', userController.getUser)
+router.get('/:id', userController.getSingleUser);
+router.put('/:id', userController.updateSignleUser);
+router.delete('/:id', userController.deleteSingleUser);
 
-
-
-router.get('/', async (req: Request, res: Response) => {
-    try {
-        const result = await pool.query(`Select * from users`);
-        res.status(200).json({
-            success: true,
-            message: "user retrieved successfully",
-            data: result.rows
-        })
-    } catch (error: any) {
-        res.status(500).json({
-            success: false,
-            message: error.meassage
-        })
-    }
-})
 
 export const userRoutes = router;
